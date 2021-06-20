@@ -12,8 +12,7 @@ def load_data(messages_filepath, categories_filepath):
     for the messages for import
     
     Returns:
-    df: pandas dataframe. Merged data from the arguments
-    
+    df: pandas dataframe. Merged data from the arguments    
     """    
     # load datasets
     messages = pd.read_csv(messages_filepath)
@@ -71,12 +70,10 @@ def save_data(df, database_filename):
     
     Returns:
     None   
-    """
-        
+    """        
     engine = create_engine("sqlite:///{}".format(database_filename))
-    df.to_sql('disaster_data', engine, index=False)
-      
-
+    df.to_sql('disaster_data', engine, if_exists='replace', index=False)   
+    
 
 def main():
     if len(sys.argv) == 4:
@@ -102,7 +99,6 @@ def main():
               'to as the third argument. \n\nExample: python process_data.py '\
               'disaster_messages.csv disaster_categories.csv '\
               'DisasterResponse.db')
-
 
 if __name__ == '__main__':
     main()
