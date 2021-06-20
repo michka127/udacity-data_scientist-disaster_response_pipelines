@@ -3,7 +3,17 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
-    """
+    """Imports two datasets behind the files paths 
+    in the arguments and merges them
+    
+    Args:
+    messages_filepath: path to a .csv file containing the messages for import
+    categories_filepath: path to a .csv file containing the cathegories 
+    for the messages for import
+    
+    Returns:
+    df: pandas dataframe. Merged data from the arguments
+    
     """    
     # load datasets
     messages = pd.read_csv(messages_filepath)
@@ -15,9 +25,18 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    """cleans data 
+    Cleaning steps include merging the messages and categories datasets, 
+    splitting the categories column into separate, clearly named columns, 
+    converting values to binary, and dropping duplicates.
+    
+    Args:
+    df: pandas dataframe. Data that needs cleaning
+    
+    Returns:
+    df: pandas dataframe. Cleaned data    
     """
-    """
-    # create a dataframe of the 36 individual category columns
+    # create a dataframe of the individual category columns
     categories = df.categories.str.split(";",expand=True,)
     
     #get category names
@@ -30,22 +49,33 @@ def clean_data(df):
     for column in categories:
         categories[column] = pd.to_numeric(categories[column].str[-1])
         
-    # drop the original categories column from `df`
+    # drop the original categories column from `df` 
+    # and concat with the new `categories` dataframe instead
     df.drop(['categories'], axis=1, inplace=True)
-    
-    # concatenate the original dataframe with the new `categories` dataframe
     df = pd.concat([df, categories], axis=1)
     
     # drop duplicates
     df.drop_duplicates(inplace=True)
     
+    # return cleaned dataframe
     return df
 
 
 def save_data(df, database_filename):
+    """stores data into a SQLite database in a specified database file path
+    If the database does not exist, it will be created
+    
+    Args:
+    df: pandas dataframe. Clean data, possibly from clean_data()
+    database_filename: Path to SQLite database. 
+    
+    Returns:
+    None   
+    """
+        
     engine = create_engine("sqlite:///{}".format(database_filename))
     df.to_sql('disaster_data', engine, index=False)
-    pass  
+      
 
 
 def main():
