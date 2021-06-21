@@ -47,8 +47,6 @@ def index():
     classifier_count = df.iloc[:,4:].sum()
     classifier_frequency_percent = 100*df.iloc[:,4:].sum()/classifier_count.sum()
     
-    # calculate variables for graph Frequency of Message Classifications
-    
     # create visuals
     graphs = [
         # Graph Count of Message Classificators
