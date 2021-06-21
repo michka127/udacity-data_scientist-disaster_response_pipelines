@@ -39,13 +39,58 @@ model = joblib.load("../models/classifier.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    # calculate variables for graph Count/Frequency of Message Classificators
+    classifier_names = df.iloc[:,4:].columns
+    classifier_count = df.iloc[:,4:].sum()
+    classifier_frequency_percent = 100*df.iloc[:,4:].sum()/classifier_count.sum()
+    
+    # calculate variables for graph Frequency of Message Classifications
+    
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
+        # Graph Count of Message Classificators
+        {
+            'data': [
+                Bar(
+                    x=classifier_names,
+                    y=classifier_count
+                )
+            ],
+
+            'layout': {
+                'title': 'Count of Message Classificators',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Classifier"
+                }
+            }
+        },     
+        # Graph Frequency of Message Classificators
+        {
+            'data': [
+                Bar(
+                    x=classifier_names,
+                    y=classifier_frequency_percent
+                )
+            ],
+
+            'layout': {
+                'title': 'Frequency of Message Classificators',
+                'yaxis': {
+                    'title': "Frequency (%)"
+                },
+                'xaxis': {
+                    'title': "Classifier"
+                }
+            }
+        },      
+           
+        # example Distribution of Message Genres
         {
             'data': [
                 Bar(
